@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Many Hands</title>
+  <meta name="description" content="A small browser game about giving to something bigger than one lifetime." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <main class="page">
+    <header class="intro">
+      <p class="kicker">A game about meaning</p>
+      <h1>Many Hands</h1>
+      <p>You are one stonecutter in a crowd raising a tower that needs more hands than will ever meet. Twelve years. Three efforts a year. Lay a stone for the Tower, or light a candle at your own Hearth. Nothing says which is right, and nothing is scored.</p>
+      <p class="how"><strong>Keys:</strong> <kbd>T</kbd> or <kbd>1</kbd> lay a stone · <kbd>H</kbd> or <kbd>2</kbd> light a candle · <kbd>Backspace</kbd> undo · <kbd>Enter</kbd> sleep / continue. Or just tap the buttons.</p>
+    </header>
+    <div id="game"></div>
+    <footer class="foot">
+      <p>The crowd is simulated and the page says so: no one is online. Four switches change the rules (counter, your mark, horizon, storms), and a table of your runs shows what each one did. Play a few ways, then ask what you felt.</p>
+      <p>Built for COMS E6998 (AI in Practice: Game Design and Development, Columbia, Fall 2026) as a minigame for the Meaning motivator, drawing on McGonigal 2011 and Schell 2019. Drawn entirely in code; no assets, no network calls. <a href="https://github.com/NICOH-YAY/many-hands">Source on GitHub</a>.</p>
+    </footer>
+  </main>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>

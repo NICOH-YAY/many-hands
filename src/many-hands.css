@@ -1,0 +1,190 @@
+/* Many Hands. Page colors come from the Atlas tokens; the scene is its own lit diorama, the same in light and dark. */
+.mh {
+  --stone-a: #c4b8a1; --stone-b: #b3a68e; --stone-c: #d0c5b0;
+  --mark: #e0862a; --flame: #ffc54d; --night: #151c2c;
+  display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; font-family: var(--body); min-width: 0; max-width: 100%;
+}
+.mh > * { min-width: 0; }
+.mh [hidden] { display: none !important; }
+.mh-top { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
+.mh-again { display: grid; }
+.mh-runs { min-width: 0; }
+.mh-stage { display: grid; gap: 8px; align-content: start; min-width: 0; }
+.mh-controls { display: grid; gap: 14px; align-content: start; min-width: 0; }
+
+/* Header: title, year, effort pips */
+.mh-hud { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; min-height: 2.4rem; }
+.mh-hud-left { display: grid; line-height: 1.1; }
+.mh-title { font: 700 1.5rem var(--display); letter-spacing: -0.01em; }
+.mh-year { font: 500 0.78rem var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); min-height: 1.1em; }
+.mh-pips { display: inline-flex; gap: 6px; padding-bottom: 6px; }
+.mh-pip { width: 18px; height: 14px; border-radius: 3px; border: 2px solid var(--muted); background: transparent; transition: background 0.2s, border-color 0.2s, transform 0.2s; }
+.mh-pip.on { background: var(--mark); border-color: var(--mark); }
+.mh-pip:not(.on) { transform: scale(0.8); opacity: 0.6; }
+
+/* Scene */
+.mh-frame { border-radius: 14px; overflow: hidden; border: 1px solid var(--line); background: var(--night); line-height: 0; }
+.mh-scene { width: 100%; height: auto; display: block; --sky-top: #e9b98a; --sky-bottom: #f6e2c2; --ground: #5b5547; --hill: #8a8068; --fig: #3a342b; }
+.mh-scene .mh-sky-top { stop-color: var(--sky-top); transition: stop-color 0.9s; }
+.mh-scene .mh-sky-bottom { stop-color: var(--sky-bottom); transition: stop-color 0.9s; }
+.mh[data-phase="SETUP"] .mh-scene, .mh[data-phase="DAWN"] .mh-scene { --sky-top: #f0b184; --sky-bottom: #fbe6bf; }
+.mh[data-phase="ALLOCATE"] .mh-scene { --sky-top: #9cc3d6; --sky-bottom: #eef0dc; --hill: #8c9a7a; }
+.mh[data-phase="DUSK"] .mh-scene { --sky-top: #3b3560; --sky-bottom: #e7905a; --hill: #4a4658; --ground: #3c3a3c; --fig: #1e1b22; }
+.mh[data-phase="ENDING"] .mh-scene, .mh[data-phase="REFLECT"] .mh-scene { --sky-top: #0e1426; --sky-bottom: #2d3a62; --hill: #232a44; --ground: #1c2133; --fig: #0b0e18; }
+.mh-hills { fill: var(--hill); opacity: 0.7; transition: fill 0.9s; }
+.mh-ground { fill: var(--ground); transition: fill 0.9s; }
+.mh-stars { fill: #fff; opacity: 0; transition: opacity 1.2s; }
+.mh[data-phase="DUSK"] .mh-stars { opacity: 0.35; }
+.mh[data-phase="ENDING"] .mh-stars, .mh[data-phase="REFLECT"] .mh-stars { opacity: 0.9; }
+.mh-outline { fill: none; stroke: rgba(40, 34, 24, 0.28); stroke-width: 1; stroke-dasharray: 2 3; }
+.mh[data-phase="DUSK"] .mh-outline, .mh[data-phase="ENDING"] .mh-outline, .mh[data-phase="REFLECT"] .mh-outline { stroke: rgba(255, 255, 255, 0.22); }
+
+/* Stones */
+.mh-stone { transition: fill 0.35s, opacity 0.35s, stroke 0.35s; stroke: rgba(40, 30, 20, 0.35); stroke-width: 0.6; transform-box: fill-box; transform-origin: center; }
+.mh-stone.empty { fill: transparent; stroke: transparent; }
+.mh-stone.many.t0 { fill: var(--stone-a); }
+.mh-stone.many.t1 { fill: var(--stone-b); }
+.mh-stone.many.t2 { fill: var(--stone-c); }
+.mh-stone.you { fill: var(--mark); stroke: #7a3d08; stroke-width: 1; }
+.mh-stone.fresh { animation: mh-drop 0.42s cubic-bezier(0.3, 1.5, 0.5, 1) backwards; }
+@keyframes mh-drop { from { transform: translateY(-26px) scale(1.15); opacity: 0; } 60% { opacity: 1; } to { transform: none; opacity: 1; } }
+.mh-flag line { stroke: var(--fig); stroke-width: 1.4; }
+.mh-flag path { fill: var(--mark); transform-box: fill-box; transform-origin: left center; animation: mh-wave 3.2s ease-in-out infinite; }
+@keyframes mh-wave { 50% { transform: skewY(-6deg) scaleX(0.9); } }
+
+/* A tall tower is lost in cloud at the top */
+.mh-haze { opacity: 0; pointer-events: none; transition: opacity 0.8s; }
+.mh-haze-a { stop-color: #f4efe6; stop-opacity: 0.95; }
+.mh-haze-b { stop-color: #f4efe6; stop-opacity: 0; }
+.mh-scene[data-tall="true"] .mh-haze { opacity: 1; }
+.mh[data-phase="DUSK"] .mh-haze-a, .mh[data-phase="DUSK"] .mh-haze-b, .mh[data-phase="ENDING"] .mh-haze-a, .mh[data-phase="ENDING"] .mh-haze-b, .mh[data-phase="REFLECT"] .mh-haze-a, .mh[data-phase="REFLECT"] .mh-haze-b { stop-color: #5b5575; }
+
+/* Fog: the hidden counter */
+.mh-fog { pointer-events: none; opacity: 0; transition: opacity 0.8s; }
+.mh-fog-0 { stop-color: #dfe5e8; stop-opacity: 0; }
+.mh-fog-a { stop-color: #dfe5e8; stop-opacity: 0.97; }
+.mh-fog-b { stop-color: #dfe5e8; stop-opacity: 0.9; }
+.mh-scene[data-fog="true"] .mh-fog { opacity: 1; }
+.mh-scene[data-fog="true"] .mh-stone.many { opacity: 0.15; }
+.mh-scene[data-fog="true"] .mh-stone.you { opacity: 0.25; }
+.mh[data-phase="DUSK"] .mh-scene .mh-fog-0, .mh[data-phase="DUSK"] .mh-scene .mh-fog-a, .mh[data-phase="DUSK"] .mh-scene .mh-fog-b { stop-color: #5b5575; }
+
+/* The crowd and you */
+.mh-crowd g { stroke: var(--fig); fill: var(--fig); stroke-width: 1.3; stroke-linecap: round; transition: stroke 0.9s, fill 0.9s; }
+.mh-crowd path { fill: none; }
+.mh-crowd .back { opacity: 0.75; }
+.mh-crowd .carry { fill: var(--stone-b); stroke: none; }
+.mh-crowd .fig { animation: mh-bob 2.8s ease-in-out infinite; }
+.mh-crowd g:nth-child(3n) .fig { animation-delay: -0.9s; }
+.mh-crowd g:nth-child(3n + 1) .fig { animation-delay: -1.8s; }
+.mh[data-phase="DUSK"] .mh-crowd .fig { animation-duration: 0.55s; }
+@keyframes mh-bob { 50% { transform: translateY(-1.6px); } }
+.mh-you { transform: translate(40px, 289px) scale(1.7); stroke: var(--mark); fill: var(--mark); stroke-width: 1.3; stroke-linecap: round; }
+.mh-you path { fill: none; }
+.mh-you-label { fill: var(--mark); font: 500 7px var(--mono); letter-spacing: 0.08em; text-transform: uppercase; }
+.mh-you.lay-a { animation: mh-lay-a 0.35s ease-out; }
+.mh-you.lay-b { animation: mh-lay-b 0.35s ease-out; }
+@keyframes mh-lay-a { 40% { transform: translate(40px, 289px) scale(1.7) translateX(5px); } }
+@keyframes mh-lay-b { 40% { transform: translate(40px, 289px) scale(1.7) translateX(5px); } }
+
+/* Storm */
+.mh-rain { opacity: 0; stroke: #cfe0f0; stroke-width: 1; pointer-events: none; transition: opacity 0.3s; }
+.mh-rain line { animation: mh-rain 0.5s linear infinite; }
+@keyframes mh-rain { from { transform: translateY(0); } to { transform: translateY(300px); } }
+.mh-flash { fill: #fff; opacity: 0; pointer-events: none; }
+.mh-scene[data-storm="true"] .mh-rain { opacity: 0.75; }
+.mh-scene[data-storm="true"] .mh-flash { animation: mh-flash 0.9s ease-out; }
+.mh-scene[data-storm="true"] .mh-tower { animation: mh-shake 0.5s 0.1s; }
+@keyframes mh-flash { 0% { opacity: 0.8; } 20% { opacity: 0; } 35% { opacity: 0.5; } 100% { opacity: 0; } }
+@keyframes mh-shake { 25% { transform: translateX(-2px); } 75% { transform: translateX(2px); } }
+
+/* Readouts */
+.mh-readouts { display: grid; gap: 2px; }
+.mh-read-tower { margin: 0; font: 600 1rem var(--mono); font-variant-numeric: tabular-nums; }
+.mh-read-you { margin: 0; font: 500 0.82rem var(--mono); color: var(--mark); }
+:root:not([data-theme="light"]) .mh-read-you { color: var(--aes); }
+.mh-note { margin: 0; font-size: 0.8rem; font-style: italic; color: var(--muted); }
+
+/* Hearth */
+.mh-hearth-box { display: grid; gap: 2px; padding-top: 4px; }
+.mh-hearth { width: 100%; height: auto; display: block; overflow: visible; }
+.mh-mantel { fill: var(--stone-b); }
+.mh-glow-a { stop-color: var(--flame); stop-opacity: 0.55; }
+.mh-glow-b { stop-color: var(--flame); stop-opacity: 0; }
+.mh-glow { opacity: 0; transform-box: fill-box; transform-origin: center; transition: opacity 0.5s, transform 0.5s; }
+.mh-candle .wax { fill: #ece3d1; stroke: rgba(40, 30, 20, 0.4); stroke-width: 0.6; }
+.mh-candle .flame { fill: var(--flame); opacity: 0; transform-box: fill-box; transform-origin: bottom center; transform: scale(0.2); transition: opacity 0.25s, transform 0.35s cubic-bezier(0.3, 1.6, 0.5, 1); }
+.mh-candle.lit .flame { opacity: 1; transform: scale(1); animation: mh-flicker 1.4s ease-in-out infinite; }
+.mh-candle:nth-child(2n).lit .flame { animation-delay: -0.5s; }
+.mh-candle:nth-child(3n).lit .flame { animation-delay: -0.9s; }
+.mh-candle.bright .flame { filter: drop-shadow(0 0 3px var(--flame)); }
+@keyframes mh-flicker { 50% { transform: scale(1.06, 0.92); } }
+.mh-read-warmth { margin: 0; font: 500 0.82rem var(--mono); color: var(--muted); }
+
+/* Story and buttons */
+.mh-story { margin: 0; font: 500 1.15rem/1.45 var(--display); min-height: 4.4em; text-wrap: pretty; }
+.mh-actions { display: grid; gap: 10px; }
+.mh-spend { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.mh-sleep { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; }
+.mh-btn {
+  font: 600 1rem var(--body); min-height: 52px; padding: 10px 16px; border-radius: 12px; border: 2px solid var(--ink);
+  background: var(--ink); color: var(--surface); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  transition: transform 0.08s, background 0.15s, opacity 0.15s; -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+}
+.mh-btn:active { transform: scale(0.96); }
+.mh-btn kbd { font: 500 0.68rem var(--mono); border: 1px solid currentColor; border-radius: 4px; padding: 0 5px; opacity: 0.65; line-height: 1.5; }
+.mh-btn.tower { text-align: left; }
+.mh-btn.hearth-btn { background: transparent; color: var(--aes); border-color: var(--aes); }
+.mh-btn.quiet { background: transparent; color: var(--ink); border-color: var(--line); }
+.mh-btn.primary { background: var(--ink); }
+.mh-btn[aria-disabled="true"] { opacity: 0.35; cursor: not-allowed; }
+.mh-btn[aria-disabled="true"]:active { transform: none; }
+.mh-btn.primary.ready { box-shadow: 0 0 0 3px var(--aes-soft), 0 0 0 5px var(--aes); }
+.mh-ico { width: 20px; height: 18px; flex: none; display: inline-block; }
+.stone-ico { background: var(--mark); border-radius: 3px; border: 2px solid #7a3d08; }
+.flame-ico { background: var(--flame); clip-path: path("M10 0 C16 7 17 13 10 18 C3 13 4 7 10 0 Z"); }
+
+/* Ground rules */
+.mh-rules { border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; display: grid; gap: 4px; background: var(--surface); margin: 0; min-width: 0; }
+.mh-rules legend { font: 500 0.75rem var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); padding: 0 6px; }
+.mh-switch { display: flex; gap: 12px; align-items: flex-start; min-height: 44px; padding: 6px 4px; cursor: pointer; line-height: 1.4; font-size: 0.95rem; }
+.mh-switch input { width: 22px; height: 22px; margin: 1px 0 0; flex: none; accent-color: var(--mark); }
+.mh-switch b { font-family: var(--display); font-weight: 700; }
+
+/* Runs table */
+.mh-runs h4, .mh-sources h4, .mh-reflect h4 { margin: 0 0 6px; font-family: var(--display); }
+.mh-table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+.mh-runs table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+.mh-runs th { text-align: left; font: 500 0.68rem var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); padding: 8px 10px; border-bottom: 1px solid var(--line); }
+.mh-runs td { padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: middle; font-variant-numeric: tabular-nums; }
+.mh-runs tr:last-child td { border-bottom: 0; }
+.mh-tags { display: flex; flex-wrap: wrap; gap: 4px; min-width: 150px; }
+.mh-tag { font: 500 0.68rem var(--mono); padding: 1px 6px; border-radius: 99px; background: var(--dyn-soft); color: var(--dyn); white-space: nowrap; }
+.mh-tag.off { background: transparent; color: var(--muted); text-decoration: line-through; border: 1px solid var(--line); }
+.mh-share { display: inline-block; width: 44px; height: 8px; border-radius: 4px; background: var(--line); vertical-align: middle; overflow: hidden; }
+.mh-share i { display: block; height: 100%; background: var(--mark); }
+
+/* Sources and reflection */
+.mh-dynamics { padding-left: 18px; font-size: 0.92rem; margin: 0; display: grid; gap: 6px; }
+.mh-reflect { border-left: 4px solid var(--aes, var(--accent)); padding: 10px 16px; background: var(--bg); border-radius: 0 8px 8px 0; }
+.mh-reflect ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
+
+/* Wide screens: the scene on the left, the story and buttons on the right */
+@media (min-width: 640px) {
+  .mh-top { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-areas: "stage controls" "stage hearth"; grid-template-rows: auto 1fr; gap: 18px 22px; align-items: start; }
+  .mh-stage { grid-area: stage; } .mh-hearth-box { grid-area: hearth; align-self: end; } .mh-controls { grid-area: controls; }
+  .mh-story { font-size: 1.3rem; }
+}
+@media (max-width: 420px) {
+  .mh-tags { min-width: 0; }
+  .mh-runs th, .mh-runs td { padding: 6px 6px; }
+  .mh-btn { padding: 10px 10px; font-size: 0.95rem; gap: 6px; }
+  .mh-btn kbd { display: none; }
+  .mh-title { font-size: 1.3rem; }
+}
+
+/* Honor reduced motion: no animation, no transitions, state changes are instant. */
+@media (prefers-reduced-motion: reduce) {
+  .mh *, .mh *::before, .mh *::after { animation: none !important; transition: none !important; }
+  .mh-scene[data-storm="true"] .mh-flash { opacity: 0.25; }
+}

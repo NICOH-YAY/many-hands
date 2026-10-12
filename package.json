@@ -1,0 +1,21 @@
+{
+  "name": "many-hands",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Many Hands: a small browser game about giving to something bigger than one lifetime.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.4",
+    "jsdom": "^30.1.2",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.2",
+    "vitest": "^5.0.3"
+  }
+}
